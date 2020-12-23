@@ -8,28 +8,25 @@ const { SpecReporter, StacktraceOption } = require('jasmine-spec-reporter');
  * @type { import("protractor").Config }
  */
 exports.config = {
-  allScriptsTimeout: 110000,
+  allScriptsTimeout: 11000,
   specs: [
-    "specs/*.ts",
+    "feature/*.feature",
   ],
   capabilities: {
     browserName: 'chrome'
   },
+  frameworkPath: require.resolve('protractor-cucumber-framework'),
   directConnect: true,
-  framework: 'jasmine',
-  jasmineNodeOpts: {
-    showColors: true,
-    defaultTimeoutInterval: 300000,
-    print: function() {}
+  framework: 'custom',
+  cucumberOpts: {
+    // require step definitions
+    require: [
+      'stepdefinition/*.ts' // accepts a glob
+    ]
   },
   onPrepare() {
     require('ts-node').register({
       project: require('path').join(__dirname, './tsconfig.json')
     });
-    jasmine.getEnv().addReporter(new SpecReporter({
-      spec: {
-        displayStacktrace: StacktraceOption.PRETTY
-      }
-    }));
   }
 };
